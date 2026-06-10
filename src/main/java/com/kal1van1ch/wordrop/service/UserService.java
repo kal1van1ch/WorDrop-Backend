@@ -23,34 +23,23 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public SuccessAuthDto registerUser(User user){
+    public User registerUser(User user){
         User existingUser = repository.findByUsername(user.getUsername());
         if (existingUser != null){
             throw new UserAlreadyExistsException("Данный пользователь уже существует в системе");
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        repository.save(user);
-
-        String message = "Пользователь успешно зарегистрирован";
-
-        return new SuccessAuthDto(
-                message,
-                LocalDateTime.now()
-        );
+        return repository.save(user);
     }
 
-    public SuccessAuthDto loginUser(User user){
+    public User loginUser(User user){
         User existingUser = repository.findByUsername(user.getUsername());
 
         if (existingUser == null || !passwordEncoder.matches(user.getPassword(), existingUser.getPassword())){
             throw new InvalidCredentialsException("Неверное имя пользователя или пароль");
         }
 
-        String message = "Пользователь успешно вошёл в систему";
-        return new SuccessAuthDto(
-                message,
-                LocalDateTime.now()
-        );
+        return existingUser;
     }
 }
