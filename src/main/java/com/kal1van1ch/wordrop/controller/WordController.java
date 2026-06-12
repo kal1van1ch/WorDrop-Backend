@@ -60,7 +60,7 @@ public class WordController {
     }
 
     @DeleteMapping("/restart")
-    public ResponseEntity<SuccessAuthDto> restartProgress(@RequestParam(required = false) WordLevel level){
+    public ResponseEntity<StatDto> restartProgress(@RequestParam(required = false) WordLevel level){
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -69,30 +69,22 @@ public class WordController {
 
             service.restartUserProgress(username);
 
-            String message = "Прогресс успешно сброшен";
-
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new SuccessAuthDto(
-                            null,
-                            message,
-                            LocalDateTime.now()
+                    .body(new StatDto(
+                            0L,
+                            0L,
+                            0L
                     ));
         }
 
         log.info("Пользователь запросил сброс результат по словам уровня {}", level);
 
-        service.restartUserProgressWithLevel(username, level);
-
-        String message = String.format("Прогресс уровня %s успешно сброшен", level);
+        var stat = service.restartUserProgressWithLevel(username, level);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new SuccessAuthDto(
-                        null,
-                        message,
-                        LocalDateTime.now()
-                ));
+                .body(stat);
     }
 
     @GetMapping("/stat")

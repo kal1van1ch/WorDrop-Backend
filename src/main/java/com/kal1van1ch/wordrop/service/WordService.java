@@ -62,9 +62,19 @@ public class WordService {
         userWordHistoryRepository.deleteByUserId(user.getId());
     }
 
-    public void restartUserProgressWithLevel(String username, WordLevel level){
+    public StatDto restartUserProgressWithLevel(String username, WordLevel level){
         User user = userRepository.findByUsername(username);
         userWordHistoryRepository.deleteByUserIdWithLevel(user.getId(), level);
+
+        Long correct = userWordHistoryRepository.countCorrectWordsByUserId(user.getId());
+        Long wrong = userWordHistoryRepository.countWrongWordsByUserId(user.getId());
+        Long totalLearned = correct;
+
+        return new StatDto(
+                correct,
+                wrong,
+                totalLearned
+        );
     }
 
     public StatDto getStatInfo(String username){
