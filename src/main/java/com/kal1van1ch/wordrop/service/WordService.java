@@ -62,6 +62,11 @@ public class WordService {
         userWordHistoryRepository.deleteByUserId(user.getId());
     }
 
+    public void restartUserProgressWithLevel(String username, WordLevel level){
+        User user = userRepository.findByUsername(username);
+        userWordHistoryRepository.deleteByUserIdWithLevel(user.getId(), level);
+    }
+
     public StatDto getStatInfo(String username){
         User user = userRepository.findByUsername(username);
 

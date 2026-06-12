@@ -1,6 +1,7 @@
 package com.kal1van1ch.wordrop.repository;
 
 import com.kal1van1ch.wordrop.model.UserWordHistory;
+import com.kal1van1ch.wordrop.model.WordLevel;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,4 +20,12 @@ public interface UserWordHistoryRepository extends JpaRepository<UserWordHistory
 
     @Query("select count(u) from UserWordHistory u where u.user.id = :userId and u.isCorrect = false")
     Long countWrongWordsByUserId(@Param("userId") Long userId);
+
+    @Modifying
+    @Transactional
+    @Query("delete from UserWordHistory u where u.user.id = :userId and u.word.level = :level")
+    void deleteByUserIdWithLevel(
+            @Param("userId") Long userId,
+            @Param("level")WordLevel level
+    );
 }
