@@ -1,9 +1,6 @@
 package com.kal1van1ch.wordrop.service;
 
-import com.kal1van1ch.wordrop.model.User;
-import com.kal1van1ch.wordrop.model.UserWordHistory;
-import com.kal1van1ch.wordrop.model.Word;
-import com.kal1van1ch.wordrop.model.WordLevel;
+import com.kal1van1ch.wordrop.model.*;
 import com.kal1van1ch.wordrop.repository.UserRepository;
 import com.kal1van1ch.wordrop.repository.UserWordHistoryRepository;
 import com.kal1van1ch.wordrop.repository.WordRepository;
@@ -36,8 +33,7 @@ public class WordService {
         List<Word> availableWords = wordRepository.findUnansweredWordsByLevel(level, user.getId());
 
         if(availableWords.isEmpty()){
-            userWordHistoryRepository.deleteByUserId(user.getId());
-            availableWords = wordRepository.findUnansweredWordsByLevel(level, user.getId());
+            return null;
         }
 
         Word word = availableWords.get(
@@ -64,5 +60,19 @@ public class WordService {
     public void restartUserProgress(String username){
         User user = userRepository.findByUsername(username);
         userWordHistoryRepository.deleteByUserId(user.getId());
+    }
+
+    public StatDto getStatInfo(String username){
+        User user = userRepository.findByUsername(username);
+
+        Long correct = userWordHistoryRepository.countCorrectWordsByUserId(user.getId());
+        Long wrong = userWordHistoryRepository.countWrongWordsByUserId(user.getId());
+        Long learnedWords = correct;
+
+        return new StatDto(
+                correct,
+                wrong,
+                learnedWords
+        );
     }
 }

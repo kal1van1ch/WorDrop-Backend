@@ -1,9 +1,6 @@
 package com.kal1van1ch.wordrop.controller;
 
-import com.kal1van1ch.wordrop.model.SuccessAuthDto;
-import com.kal1van1ch.wordrop.model.Word;
-import com.kal1van1ch.wordrop.model.WordLevel;
-import com.kal1van1ch.wordrop.model.WordTransferDto;
+import com.kal1van1ch.wordrop.model.*;
 import com.kal1van1ch.wordrop.service.WordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +13,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/words")
+@CrossOrigin(origins = "http://localhost:5173")
 public class WordController {
     private static final Logger log = LoggerFactory.getLogger(WordController.class);
     private final WordService service;
@@ -30,6 +28,13 @@ public class WordController {
         log.info("Пользователю {} выдана карточка уровня {}", username, level);
 
         Word word = service.getRandomWord(level, username);
+
+        if (word == null) {
+            return ResponseEntity
+                    .status(HttpStatus.NO_CONTENT)
+                    .build();
+        }
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(word);
@@ -70,5 +75,17 @@ public class WordController {
                         message,
                         LocalDateTime.now()
                 ));
+    }
+
+    @GetMapping("/stat")
+    public ResponseEntity<StatDto> getStatInfo(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Пользователь {} запросил данные по статистике своих ответов", username);
+
+        var stat = service.getStatInfo(username);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(stat);
     }
 }

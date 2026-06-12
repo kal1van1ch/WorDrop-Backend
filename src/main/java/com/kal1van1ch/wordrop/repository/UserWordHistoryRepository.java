@@ -16,4 +16,7 @@ public interface UserWordHistoryRepository extends JpaRepository<UserWordHistory
 
     @Query("select count(u) from UserWordHistory u where u.user.id = :userId and u.isCorrect = true")
     Long countCorrectWordsByUserId(@Param("userId") Long userId);
+
+    @Query("select count(u) from UserWordHistory u where u.user.id = :userId and u.isCorrect = false")
+    Long countWrongWordsByUserId(@Param("userId") Long userId);
 }
