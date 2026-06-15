@@ -1,4 +1,4 @@
-package com.kal1van1ch.wordrop.model;
+package com.kal1van1ch.wordrop.model.dto;
 
 import java.time.LocalDateTime;
 

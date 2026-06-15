@@ -1,6 +1,10 @@
 package com.kal1van1ch.wordrop.controller;
 
 import com.kal1van1ch.wordrop.model.*;
+import com.kal1van1ch.wordrop.model.dto.StatDto;
+import com.kal1van1ch.wordrop.model.dto.SuccessAuthDto;
+import com.kal1van1ch.wordrop.model.dto.WordDto;
+import com.kal1van1ch.wordrop.model.dto.WordTransferDto;
 import com.kal1van1ch.wordrop.service.WordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,16 +22,18 @@ public class WordController {
     private static final Logger log = LoggerFactory.getLogger(WordController.class);
     private final WordService service;
 
-    public WordController(WordService service){
+    public WordController(
+            WordService service
+    ){
         this.service = service;
     }
 
     @GetMapping("/random")
-    public ResponseEntity<Word> getRandomWord(@RequestParam WordLevel level){
+    public ResponseEntity<WordDto> getRandomWord(@RequestParam WordLevel level){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info("Пользователю {} выдана карточка уровня {}", username, level);
 
-        Word word = service.getRandomWord(level, username);
+        WordDto word = service.getRandomWord(level, username);
 
         if (word == null) {
             return ResponseEntity

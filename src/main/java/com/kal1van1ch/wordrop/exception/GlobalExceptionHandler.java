@@ -1,6 +1,6 @@
 package com.kal1van1ch.wordrop.exception;
 
-import com.kal1van1ch.wordrop.model.ErrorDto;
+import com.kal1van1ch.wordrop.model.dto.ErrorDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

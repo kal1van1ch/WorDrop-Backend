@@ -1,8 +1,9 @@
 package com.kal1van1ch.wordrop.controller;
 
+import com.kal1van1ch.wordrop.model.dto.UserDto;
 import com.kal1van1ch.wordrop.security.JwtCore;
-import com.kal1van1ch.wordrop.model.SuccessAuthDto;
-import com.kal1van1ch.wordrop.model.User;
+import com.kal1van1ch.wordrop.model.dto.SuccessAuthDto;
+import com.kal1van1ch.wordrop.model.entity.User;
 import com.kal1van1ch.wordrop.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +30,8 @@ public class UserAuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<SuccessAuthDto> register(@RequestBody User user){
-        log.info("вызван метод register для {}", user.getUsername());
+    public ResponseEntity<SuccessAuthDto> register(@RequestBody UserDto user){
+        log.info("вызван метод register для {}", user.username());
 
         User registeredUser = userService.registerUser(user);
         String token = jwtCore.generateToken(registeredUser.getUsername());
@@ -47,8 +48,8 @@ public class UserAuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SuccessAuthDto> login(@RequestBody User user){
-        log.info("вызван метод login для {}", user.getUsername());
+    public ResponseEntity<SuccessAuthDto> login(@RequestBody UserDto user){
+        log.info("вызван метод login для {}", user.username());
 
         User authenedUser = userService.loginUser(user);
         String token = jwtCore.generateToken(authenedUser.getUsername());

@@ -1,11 +1,18 @@
 package com.kal1van1ch.wordrop.service;
 
+import com.kal1van1ch.wordrop.mapper.WordMapper;
 import com.kal1van1ch.wordrop.model.*;
+import com.kal1van1ch.wordrop.model.dto.StatDto;
+import com.kal1van1ch.wordrop.model.dto.WordDto;
+import com.kal1van1ch.wordrop.model.entity.User;
+import com.kal1van1ch.wordrop.model.entity.UserWordHistory;
+import com.kal1van1ch.wordrop.model.entity.Word;
 import com.kal1van1ch.wordrop.repository.UserRepository;
 import com.kal1van1ch.wordrop.repository.UserWordHistoryRepository;
 import com.kal1van1ch.wordrop.repository.WordRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,18 +24,21 @@ public class WordService {
     private final UserWordHistoryRepository userWordHistoryRepository;
     private final WordRepository wordRepository;
     private final Random random = new Random();
+    private final WordMapper mapper;
 
     public WordService(
             UserRepository userRepository,
             UserWordHistoryRepository userWordHistoryRepository,
-            WordRepository wordRepository
+            WordRepository wordRepository,
+            WordMapper mapper
     ){
         this.userRepository = userRepository;
         this.userWordHistoryRepository = userWordHistoryRepository;
         this.wordRepository = wordRepository;
+        this.mapper = mapper;
     }
 
-    public Word getRandomWord(WordLevel level, String username){
+    public WordDto getRandomWord(WordLevel level, String username){
         User user = userRepository.findByUsername(username);
         List<Word> availableWords = wordRepository.findUnansweredWordsByLevel(level, user.getId());
 
@@ -40,9 +50,10 @@ public class WordService {
                 random.nextInt(availableWords.size())
         );
 
-        return word;
+        return mapper.toDto(word);
     }
 
+    @Transactional
     public void logAnswerResult(boolean isCorrect, Long wordId, String username){
         User user = userRepository.findByUsername(username);
         Word word = wordRepository.findById(wordId)
@@ -57,6 +68,7 @@ public class WordService {
         userWordHistoryRepository.save(history);
     }
 
+    @Transactional
     public void restartUserProgress(String username){
         User user = userRepository.findByUsername(username);
         userWordHistoryRepository.deleteByUserId(user.getId());

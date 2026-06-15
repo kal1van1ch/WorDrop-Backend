@@ -1,12 +1,12 @@
 package com.kal1van1ch.wordrop.repository;
 
-import com.kal1van1ch.wordrop.model.UserWordHistory;
+import com.kal1van1ch.wordrop.model.entity.UserWordHistory;
 import com.kal1van1ch.wordrop.model.WordLevel;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 
 public interface UserWordHistoryRepository extends JpaRepository<UserWordHistory, Long> {

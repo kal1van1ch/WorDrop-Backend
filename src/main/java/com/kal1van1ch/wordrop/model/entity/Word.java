@@ -1,5 +1,6 @@
-package com.kal1van1ch.wordrop.model;
+package com.kal1van1ch.wordrop.model.entity;
 
+import com.kal1van1ch.wordrop.model.WordLevel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
